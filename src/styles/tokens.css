@@ -1,0 +1,208 @@
+/*
+  Palette sourced from BlancVPN landing (static_site_2 CSS):
+  #3183ff, #3b82f6, #2563eb, #4a90ff, #3b7aff, #2570e0,
+  #22c55e, #ffffff, #111113, #1c1c1e, #18181b, #0f0f0f,
+  #212024, #2c2c2e, #1a1a1a, #f3f3f3, #f4f4f4, #e5e5e5,
+  #e5e7eb, #8e8e93, #9ca3af, #636366, #4a4a4a,
+  destructive hsl(0 84.2% 60.2%) ≈ #ef4444,
+  foreground hsl(210 40% 98%) ≈ #f8fafc,
+  muted-foreground hsl(215.4 16.3% 46.9%) ≈ #64748b,
+  background hsl(240 5.6% 7.1%) ≈ #111114
+*/
+
+:root,
+[data-theme='dark'] {
+  --brand: #3183ff;
+  --brand-deep: #2563eb;
+  --brand-soft: #4a90ff;
+  --ink: #f8fafc;
+  --ink-muted: #9ca3af;
+  --paper: #111114;
+  --paper-2: #1c1c1e;
+  --line: #2c2c2e;
+  --good: #22c55e;
+  --bad: #ef4444;
+  --neutral: #8e8e93;
+  --surface: #18181b;
+  --shadow: 0 16px 48px #00000059;
+  --radius: 16px;
+  --font: 'Golos Text', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --bg: #111114;
+  --grid-opacity: 0.18;
+  --title: #ffffff;
+  --controls-fade: #111114eb;
+  --modal-bg: #1c1c1e;
+  --modal-scrim: #0f0f0fb8;
+  --code-bg: #212024;
+  --code-color: #4a90ff;
+
+  --track: #3183ff59;
+  --cell-normal: #212024;
+  --cell-stroke: #2c2c2e;
+  --cell-surprise: #18181b;
+  --cell-surprise-stroke: #3183ff;
+  --cell-start: #2570e0;
+  --cell-finish: #22c55e33;
+  --cell-num: #e5e7eb;
+  --cell-num-special: #ffffff;
+  --cell-active-stroke: #ffffff;
+  --token-ring: #4a90ff;
+  --vpn-bar-bg: #18181b;
+  --btn-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+  --dice-face: linear-gradient(145deg, #ffffff 0%, #f3f3f3 55%, #e5e5e5 100%);
+  --dice-border: #e5e7eb;
+  --dice-highlight: #ffffffd9;
+  --dice-pip: #1a1a1a;
+}
+
+[data-theme='light'] {
+  --brand: #3183ff;
+  --brand-deep: #2563eb;
+  --brand-soft: #3b82f6;
+  --ink: #1a1a1a;
+  --ink-muted: #64748b;
+  --paper: #f3f3f3;
+  --paper-2: #ffffff;
+  --line: #e5e5e5;
+  --good: #22c55e;
+  --bad: #ef4444;
+  --neutral: #8e8e93;
+  --surface: #ffffff;
+  --shadow: 0 12px 40px #00000014;
+
+  --bg: #f3f3f3;
+  --grid-opacity: 0.28;
+  --title: #1a1a1a;
+  --controls-fade: #f3f3f3f0;
+  --modal-bg: #ffffff;
+  --modal-scrim: #11111366;
+  --code-bg: #ffffff;
+  --code-color: #2563eb;
+
+  --track: #3183ff47;
+  --cell-normal: #ffffff;
+  --cell-stroke: #e5e7eb;
+  --cell-surprise: #ffffff;
+  --cell-surprise-stroke: #3183ff;
+  --cell-start: #3b82f6;
+  --cell-finish: #22c55e33;
+  --cell-num: #4a4a4a;
+  --cell-num-special: #ffffff;
+  --cell-active-stroke: #2563eb;
+  --token-ring: #3183ff;
+  --vpn-bar-bg: #ffffff;
+  --btn-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+  --dice-face: linear-gradient(145deg, #2c2c2e 0%, #1c1c1e 55%, #111113 100%);
+  --dice-border: #2c2c2e;
+  --dice-highlight: #ffffff14;
+  --dice-pip: #ffffff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  transition: color 0.2s ease, background 0.25s ease;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--grid-opacity);
+  background-image:
+    linear-gradient(#3183ff14 1px, transparent 1px),
+    linear-gradient(90deg, #3183ff14 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, #000 25%, transparent 78%);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 1rem 1rem 1.5rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  display: flex;
+  flex-direction: column;
+}
+
+.app-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--btn-gradient);
+  color: #ffffff;
+  box-shadow: 0 8px 28px #3183ff66;
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 10px 32px #3183ff88;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--brand);
+}
+
+.btn-block {
+  width: 100%;
+}

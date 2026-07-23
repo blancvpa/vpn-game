@@ -1,0 +1,62 @@
+.splash {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem 0 2rem;
+  animation: splash-in 0.55s ease both;
+}
+
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.splash__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.splash__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.splash__brand-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.splash__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 9vw, 3.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  color: var(--title);
+}
+
+.splash__lead {
+  margin: 0;
+  max-width: 28ch;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.splash__cta {
+  margin-top: 0.75rem;
+}

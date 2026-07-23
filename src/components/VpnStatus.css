@@ -1,0 +1,51 @@
+.vpn-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--vpn-bar-bg);
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.vpn-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vpn-status__label {
+  color: var(--ink-muted);
+}
+
+.vpn-status__label strong {
+  font-weight: 600;
+}
+
+.vpn-status__hint {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.vpn-status--off .vpn-status__dot {
+  background: var(--bad);
+}
+
+.vpn-status--off .vpn-status__label strong,
+.vpn-status--off .vpn-status__hint {
+  color: var(--bad);
+}
+
+.vpn-status--on .vpn-status__dot {
+  background: var(--good);
+}
+
+.vpn-status--on .vpn-status__label strong,
+.vpn-status--on .vpn-status__hint {
+  color: var(--good);
+}
