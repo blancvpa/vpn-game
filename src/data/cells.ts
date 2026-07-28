@@ -2,22 +2,26 @@ import type { BoardCell } from '../game/types'
 import { BOARD_SIZE, FINISH_INDEX } from '../game/types'
 
 const FLAVORS = [
-  'DNS не резолвится…',
-  'Пинг 900 ms…',
-  'Капча грузится вечность…',
-  'SSL-сертификат просрочен…',
-  'Пакеты теряются по пути…',
-  'CDN отдаёт 403…',
-  'Обход через соседний AS…',
-  'Включаете режим инкогнито. Не помогает.',
-  'Проверяете IP — всё ещё «домашний».',
-  'Ищете рабочий DNS…',
+  'Ищете стабильный доступ к сети',
+  'Проверяете, открываются ли нужные сайты',
+  'Сравниваете варианты защиты соединения',
+  'Думаете, как пользоваться сервисами спокойнее',
 ]
 
-export const SURPRISE_CELL_INDICES = [2, 4, 6, 8, 10, 12, 14, 16, 18, 19, 20, 21, 22] as const
+/** Story funnel cells — events assigned in eventPool */
+export const STORY_CELL_INDICES = [2, 4, 6, 8, 9, 10] as const
+
+/** Optional light friction before the funnel starts */
+export const FRICTION_CELL_INDICES = [1] as const
+
+export const SURPRISE_CELL_INDICES = [
+  ...STORY_CELL_INDICES,
+  ...FRICTION_CELL_INDICES,
+] as const
 
 function buildCells(): BoardCell[] {
   const cells: BoardCell[] = []
+  const surpriseSet = new Set<number>(SURPRISE_CELL_INDICES)
 
   for (let i = 0; i < BOARD_SIZE; i++) {
     if (i === 0) {
@@ -35,12 +39,12 @@ function buildCells(): BoardCell[] {
         index: i,
         kind: 'finish',
         label: 'Финиш',
-        flavor: 'Свободный интернет найден!',
+        flavor: 'Свободный интернет найден.',
       })
       continue
     }
 
-    if (SURPRISE_CELL_INDICES.includes(i as (typeof SURPRISE_CELL_INDICES)[number])) {
+    if (surpriseSet.has(i)) {
       cells.push({
         index: i,
         kind: 'surprise',

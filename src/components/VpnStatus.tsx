@@ -14,10 +14,10 @@ export function VpnStatus({ connected }: VpnStatusProps) {
       <span className="vpn-status__dot" aria-hidden />
       <span className="vpn-status__label">
         BlancVPN:{' '}
-        <strong>{connected ? 'подключён' : 'не подключён'}</strong>
+        <strong>{connected ? 'подключен' : 'не подключен'}</strong>
       </span>
       <span className="vpn-status__hint">
-        {connected ? 'Вы защищены' : 'Вы ещё не защищены'}
+        {connected ? 'Вы защищены' : 'Вы еще не защищены'}
       </span>
     </div>
   )

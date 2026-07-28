@@ -1,22 +1,24 @@
-import { EVENT_IDS } from '../data/events'
-import { SURPRISE_CELL_INDICES } from '../data/cells'
+import { FRICTION_CELL_INDICES } from '../data/cells'
+import { FRICTION_EVENT_IDS, STORY_BY_CELL } from '../data/events'
 import type { BoardEventMap } from '../game/types'
 
-const SEEN_EVENTS_KEY = 'blancvpn-seen-events'
+const SEEN_FRICTION_KEY = 'blancvpn-seen-friction'
 
-function readSeenEvents(): string[] {
+function readSeenFriction(): string[] {
   try {
-    const raw = localStorage.getItem(SEEN_EVENTS_KEY)
+    const raw = localStorage.getItem(SEEN_FRICTION_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw) as string[]
-    return Array.isArray(parsed) ? parsed.filter((id) => EVENT_IDS.includes(id)) : []
+    return Array.isArray(parsed)
+      ? parsed.filter((id) => (FRICTION_EVENT_IDS as readonly string[]).includes(id))
+      : []
   } catch {
     return []
   }
 }
 
-function writeSeenEvents(ids: string[]): void {
-  localStorage.setItem(SEEN_EVENTS_KEY, JSON.stringify(ids))
+function writeSeenFriction(ids: string[]): void {
+  localStorage.setItem(SEEN_FRICTION_KEY, JSON.stringify(ids))
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -29,26 +31,26 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /**
- * Assign a fresh set of event ids to action cells.
- * Events do not repeat across playthroughs until the full catalog is exhausted.
+ * Story funnel cells are fixed. Friction cells get a rotating subset
+ * of the friction pool (no repeats until the pool is exhausted).
  */
 export function createBoardEventMap(): BoardEventMap {
-  const required = SURPRISE_CELL_INDICES.length
-  let seen = readSeenEvents()
-  let available = EVENT_IDS.filter((id) => !seen.includes(id))
+  const boardEvents: BoardEventMap = { ...STORY_BY_CELL }
 
-  if (available.length < required) {
+  const needed = FRICTION_CELL_INDICES.length
+  let seen = readSeenFriction()
+  let available = FRICTION_EVENT_IDS.filter((id) => !seen.includes(id))
+
+  if (available.length < needed) {
     seen = []
-    available = [...EVENT_IDS]
+    available = [...FRICTION_EVENT_IDS]
   }
 
-  const picked = shuffle(available).slice(0, required)
-  const boardEvents: BoardEventMap = {}
-
-  SURPRISE_CELL_INDICES.forEach((cellIndex, idx) => {
+  const picked = shuffle(available).slice(0, needed)
+  FRICTION_CELL_INDICES.forEach((cellIndex, idx) => {
     boardEvents[cellIndex] = picked[idx]!
   })
 
-  writeSeenEvents([...seen, ...picked])
+  writeSeenFriction([...seen, ...picked])
   return boardEvents
 }

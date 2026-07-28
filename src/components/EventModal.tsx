@@ -10,7 +10,7 @@ type EventModalProps = {
 function toneEyebrow(tone: BoardEvent['tone']): string {
   switch (tone) {
     case 'bad':
-      return 'Провал'
+      return 'Помеха'
     case 'good':
       return 'Удача'
     case 'brand':
@@ -27,8 +27,6 @@ function effectLabel(event: BoardEvent): string {
       return e.steps > 0 ? `+${e.steps} клеток` : `${e.steps} клеток`
     case 'skip':
       return e.turns === 1 ? 'Пропуск хода' : `Пропуск ${e.turns} ходов`
-    case 'restart':
-      return 'Начать заново'
     case 'flavor':
       return ''
   }

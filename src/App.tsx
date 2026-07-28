@@ -127,9 +127,9 @@ export default function App() {
               {state.skipsLeft > 0
                 ? `Пропустить ход (${state.skipsLeft})`
                 : state.phase === 'rolling'
-                  ? 'Кубик крутится…'
+                  ? 'Кубик крутится'
                   : state.phase === 'moving'
-                    ? 'Идём…'
+                    ? 'Идем'
                     : 'Бросить кубик'}
             </button>
           </div>

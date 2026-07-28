@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createBoardEventMap } from './eventPool'
-import { SURPRISE_CELL_INDICES } from '../data/cells'
+import { FRICTION_CELL_INDICES, STORY_CELL_INDICES, SURPRISE_CELL_INDICES } from '../data/cells'
+import { FRICTION_EVENT_IDS, STORY_BY_CELL } from '../data/events'
 
 const store = new Map<string, string>()
 
@@ -26,12 +27,22 @@ describe('event pool', () => {
     expect(Object.keys(map)).toHaveLength(SURPRISE_CELL_INDICES.length)
   })
 
-  it('does not repeat events across two consecutive boards', () => {
-    const first = Object.values(createBoardEventMap())
-    const second = Object.values(createBoardEventMap())
+  it('keeps the product story funnel fixed', () => {
+    const map = createBoardEventMap()
+    for (const cell of STORY_CELL_INDICES) {
+      expect(map[cell]).toBe(STORY_BY_CELL[cell])
+    }
+  })
 
-    expect(new Set(first).size).toBe(first.length)
-    expect(new Set(second).size).toBe(second.length)
-    expect(first.some((id) => second.includes(id))).toBe(false)
+  it('rotates friction events across playthroughs', () => {
+    const firstMap = createBoardEventMap()
+    const first = FRICTION_CELL_INDICES.map((i) => firstMap[i]!)
+    const secondMap = createBoardEventMap()
+    const second = FRICTION_CELL_INDICES.map((i) => secondMap[i]!)
+
+    expect(first).toHaveLength(FRICTION_CELL_INDICES.length)
+    expect(second).toHaveLength(FRICTION_CELL_INDICES.length)
+    expect((FRICTION_EVENT_IDS as readonly string[]).includes(first[0]!)).toBe(true)
+    expect(first[0]).not.toBe(second[0])
   })
 })

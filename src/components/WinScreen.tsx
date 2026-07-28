@@ -43,9 +43,10 @@ export function WinScreen({ code, turns, onReplay }: WinScreenProps) {
       transition={{ duration: 0.4 }}
     >
       <p className="win__eyebrow">Финиш</p>
-      <h1 className="win__title">Интернет свободен!</h1>
+      <h1 className="win__title">Вы нашли свободный интернет</h1>
       <p className="win__lead">
-        Вы добрались за {turns} {turnsLabel(turns)}. Вот ваш промокод на подписку BlancVPN.
+        Вы добрались за {turns} {turnsLabel(turns)}. Промокод на подписку BlancVPN. Можно
+        протестировать 30 дней — если не подойдет, вернем деньги.
       </p>
 
       <div className="win__code-block">
@@ -58,7 +59,7 @@ export function WinScreen({ code, turns, onReplay }: WinScreenProps) {
 
       <div className="win__actions">
         <button type="button" className="btn btn-primary btn-block" onClick={handlePay}>
-          Оформить подписку
+          Попробовать
         </button>
         <button type="button" className="btn btn-ghost btn-block" onClick={handleShare}>
           Поделиться

@@ -29,8 +29,7 @@ function markVisited(visited: number[], index: number): number[] {
 }
 
 function vpnStatusForEvent(eventId: string, current: boolean): boolean {
-  if (eventId.startsWith('blancvpn')) return true
-  if (eventId === 'unpaid_month' || eventId === 'max_order' || eventId === 'router_broken') return false
+  if (eventId.startsWith('blancvpn_')) return true
   return current
 }
 
@@ -141,11 +140,6 @@ function applyEventEffect(state: GameState): GameState {
         skipsLeft: state.skipsLeft + effect.turns,
         lastMessage: null,
       }
-    case 'restart':
-      return {
-        ...createInitialState(state.boardEvents),
-        turns: state.turns,
-      }
     case 'move': {
       const target = clampPosition(state.position + effect.steps)
       return beginMove(
@@ -211,6 +205,20 @@ export function reduce(state: GameState, action: GameAction): GameState {
       const nextPosition = clampPosition(state.position + direction)
       const nextPending = state.pendingSteps - direction
       const visited = markVisited(state.visited, nextPosition)
+
+      // Moving forward: stop on the first surprise so the product funnel is not skipped.
+      if (direction > 0 && !state.suppressEvents && nextPosition < FINISH_INDEX) {
+        const cell = getCell(nextPosition)
+        const eventId = state.boardEvents[nextPosition]
+        if (cell.kind === 'surprise' && eventId) {
+          return resolveLanding({
+            ...state,
+            position: nextPosition,
+            pendingSteps: 0,
+            visited,
+          })
+        }
+      }
 
       if (nextPending === 0) {
         return resolveLanding({

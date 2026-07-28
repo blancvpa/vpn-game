@@ -22,8 +22,8 @@ export function Splash({ onStart }: SplashProps) {
       </h1>
 
       <p className="splash__lead">
-        Кидайте кубик, обходите блокировки и доберитесь до свободного интернета. В конце — промокод
-        на подписку.
+        Пройдите короткую игру и узнаете, чем BlancVPN удобен в повседневной сети. В конце —
+        промокод на подписку.
       </p>
 
       <button type="button" className="btn btn-primary btn-block splash__cta" onClick={onStart}>

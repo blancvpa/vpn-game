@@ -1,5 +1,5 @@
 export async function shareResult(code: string): Promise<'shared' | 'copied' | 'failed'> {
-  const text = `Я нашёл свободный интернет в бродилке BlancVPN! Промокод: ${code}`
+  const text = `Я прошел игру BlancVPN «В поисках свободного интернета». Промокод: ${code}`
   const url = typeof window !== 'undefined' ? window.location.href : ''
 
   if (typeof navigator !== 'undefined' && navigator.share) {

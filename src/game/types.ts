@@ -1,10 +1,9 @@
-export const BOARD_SIZE = 24
+export const BOARD_SIZE = 12
 export const FINISH_INDEX = BOARD_SIZE - 1
 
 export type EventEffect =
   | { kind: 'move'; steps: number }
   | { kind: 'skip'; turns: number }
-  | { kind: 'restart' }
   | { kind: 'flavor' }
 
 export type BoardEvent = {
