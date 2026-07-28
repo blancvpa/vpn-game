@@ -1,4 +1,4 @@
-export const BOARD_SIZE = 12
+export const BOARD_SIZE = 24
 export const FINISH_INDEX = BOARD_SIZE - 1
 
 export type EventEffect =

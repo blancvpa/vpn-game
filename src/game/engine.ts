@@ -1,4 +1,4 @@
-import { getCell } from '../data/cells'
+import { getCell, isStoryCell } from '../data/cells'
 import { getEvent } from '../data/events'
 import {
   FINISH_INDEX,
@@ -206,11 +206,11 @@ export function reduce(state: GameState, action: GameAction): GameState {
       const nextPending = state.pendingSteps - direction
       const visited = markVisited(state.visited, nextPosition)
 
-      // Moving forward: stop on the first surprise so the product funnel is not skipped.
+      // Moving forward: stop only on story cells so the funnel is not skipped,
+      // while ordinary game surprises still depend on exact dice landings.
       if (direction > 0 && !state.suppressEvents && nextPosition < FINISH_INDEX) {
-        const cell = getCell(nextPosition)
         const eventId = state.boardEvents[nextPosition]
-        if (cell.kind === 'surprise' && eventId) {
+        if (isStoryCell(nextPosition) && eventId) {
           return resolveLanding({
             ...state,
             position: nextPosition,

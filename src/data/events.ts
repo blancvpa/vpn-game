@@ -1,7 +1,7 @@
 import type { BoardEvent } from '../game/types'
 
 export const EVENTS: Record<string, BoardEvent> = {
-  // --- Story funnel (fixed on board) ---
+  // --- Story funnel (fixed, spaced across the board) ---
   blancvpn_locations: {
     id: 'blancvpn_locations',
     title: 'Более 50 локаций',
@@ -20,14 +20,14 @@ export const EVENTS: Record<string, BoardEvent> = {
     id: 'blancvpn_protocols',
     title: 'Протокол подбирается сам',
     text: 'BlancVPN автоматически выбирает подходящий протокол, чтобы соединение оставалось стабильным.',
-    effect: { kind: 'move', steps: 2 },
+    effect: { kind: 'move', steps: 1 },
     tone: 'brand',
   },
   blancvpn_ru_services: {
     id: 'blancvpn_ru_services',
     title: 'Российские сервисы работают',
     text: 'Банки, маркетплейсы и другие российские сервисы можно открывать, не отключая BlancVPN.',
-    effect: { kind: 'move', steps: 1 },
+    effect: { kind: 'move', steps: 2 },
     tone: 'brand',
   },
   blancvpn_guarantee: {
@@ -45,18 +45,55 @@ export const EVENTS: Record<string, BoardEvent> = {
     tone: 'brand',
   },
 
-  // --- Light external friction (optional cells) ---
+  // --- Game friction (external internet problems, not BlancVPN flaws) ---
   whitelist: {
     id: 'whitelist',
     title: 'Ограничения сети',
-    text: 'Провайдер ограничил доступ к части сайтов. Вернитесь на клетку назад.',
+    text: 'Провайдер ограничил доступ к части сайтов. Вернитесь на 2 клетки назад.',
+    effect: { kind: 'move', steps: -2 },
+    tone: 'bad',
+  },
+  slow_dns: {
+    id: 'slow_dns',
+    title: 'Медленный DNS',
+    text: 'Сайты открываются через раз. Пропустите ход.',
+    effect: { kind: 'skip', turns: 1 },
+    tone: 'bad',
+  },
+  captcha_wall: {
+    id: 'captcha_wall',
+    title: 'Капча на каждом шагу',
+    text: 'Приходится снова и снова доказывать, что вы не робот. Вернитесь на клетку назад.',
     effect: { kind: 'move', steps: -1 },
     tone: 'bad',
   },
+  outdated_guide: {
+    id: 'outdated_guide',
+    title: 'Устаревшая инструкция',
+    text: 'Гайд из старого чата уже не работает. Вернитесь на 2 клетки назад.',
+    effect: { kind: 'move', steps: -2 },
+    tone: 'bad',
+  },
+  unstable_connection: {
+    id: 'unstable_connection',
+    title: 'Связь отваливается',
+    text: 'Соединение обрывается каждые несколько минут. Пропустите ход.',
+    effect: { kind: 'skip', turns: 1 },
+    tone: 'bad',
+  },
+  fake_vpn: {
+    id: 'fake_vpn',
+    title: 'Сомнительный VPN из чата',
+    text: '«Стопроцентно рабочий» сервис даже не открывается. Пропустите ход.',
+    effect: { kind: 'skip', turns: 1 },
+    tone: 'bad',
+  },
+
+  // --- Neutral flavor ---
   free_vpn_data: {
     id: 'free_vpn_data',
     title: 'Бесплатный VPN',
-    text: 'Бесплатный VPN может зарабатывать на ваших данных. С BlancVPN ваша приватность под защитой.',
+    text: 'Бесплатный VPN может зарабатывать на ваших данных — им тоже нужно на чем-то зарабатывать.',
     effect: { kind: 'flavor' },
     tone: 'neutral',
   },
@@ -67,62 +104,88 @@ export const EVENTS: Record<string, BoardEvent> = {
     effect: { kind: 'flavor' },
     tone: 'neutral',
   },
-  unstable_connection: {
-    id: 'unstable_connection',
-    title: 'Нестабильное соединение',
-    text: 'Без защиты соединение то и дело обрывается. Вернитесь на клетку назад.',
-    effect: { kind: 'move', steps: -1 },
-    tone: 'bad',
+  too_many_tabs: {
+    id: 'too_many_tabs',
+    title: 'Слишком много вкладок',
+    text: 'Открыто десяток гайдов, и уже непонятно, какой из них актуален.',
+    effect: { kind: 'flavor' },
+    tone: 'neutral',
+  },
+  mobile_hotspot: {
+    id: 'mobile_hotspot',
+    title: 'Раздача с телефона',
+    text: 'Сейчас непонятно, что у вас: домашний интернет, LTE или раздача с телефона.',
+    effect: { kind: 'flavor' },
+    tone: 'neutral',
   },
 
-  // --- Replay pool (extra brand benefits) ---
-  blancvpn_devices: {
-    id: 'blancvpn_devices',
-    title: 'Одна подписка на все устройства',
-    text: 'Подключайте BlancVPN на любое количество устройств — себе и близким.',
-    effect: { kind: 'move', steps: 2 },
-    tone: 'brand',
+  // --- Good luck ---
+  mirror_found: {
+    id: 'mirror_found',
+    title: 'Рабочее зеркало',
+    text: 'Нашли рабочее зеркало нужного сайта. Три шага вперед.',
+    effect: { kind: 'move', steps: 3 },
+    tone: 'good',
   },
-  blancvpn_speed: {
-    id: 'blancvpn_speed',
-    title: 'Высокая скорость',
-    text: 'Скорость до 10 Гбит/с позволяет смотреть видео и пользоваться сетью без задержек.',
+  right_tip: {
+    id: 'right_tip',
+    title: 'Нужный совет',
+    text: 'В чате подсказали рабочее решение. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
-    tone: 'brand',
+    tone: 'good',
   },
-  blancvpn_support: {
-    id: 'blancvpn_support',
-    title: 'Поддержка 24/7',
-    text: 'Дружелюбные специалисты BlancVPN помогут настроить VPN на любых устройствах.',
+  captcha_passed: {
+    id: 'captcha_passed',
+    title: 'Капча с первого раза',
+    text: 'Капча пропустила вас без лишней борьбы. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
-    tone: 'brand',
+    tone: 'good',
   },
-  blancvpn_no_logs: {
-    id: 'blancvpn_no_logs',
-    title: 'Не торгуем данными',
-    text: 'В отличие от бесплатных VPN, BlancVPN не зарабатывает на продаже личной информации.',
+  stable_dns: {
+    id: 'stable_dns',
+    title: 'Стабильный DNS',
+    text: 'Нашли DNS, который не отваливается каждые пять минут. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
-    tone: 'brand',
+    tone: 'good',
+  },
+  phone_works: {
+    id: 'phone_works',
+    title: 'С телефона получилось',
+    text: 'То, что не работало на ноутбуке, заработало с телефона. Один шаг вперед.',
+    effect: { kind: 'move', steps: 1 },
+    tone: 'good',
   },
 }
 
-/** Fixed story funnel: cell index → event id */
+/** Fixed story funnel: spaced so the board still feels like a game */
 export const STORY_BY_CELL: Record<number, string> = {
-  2: 'blancvpn_locations',
-  4: 'blancvpn_split',
-  6: 'blancvpn_protocols',
-  8: 'blancvpn_ru_services',
-  9: 'blancvpn_guarantee',
-  10: 'blancvpn_discount',
+  5: 'blancvpn_locations',
+  10: 'blancvpn_split',
+  14: 'blancvpn_protocols',
+  17: 'blancvpn_ru_services',
+  20: 'blancvpn_guarantee',
+  22: 'blancvpn_discount',
 }
 
 export const STORY_EVENT_IDS = Object.values(STORY_BY_CELL)
 
-export const FRICTION_EVENT_IDS = [
+/** Rotating pool for non-story surprise cells */
+export const GAME_EVENT_IDS = [
   'whitelist',
+  'slow_dns',
+  'captcha_wall',
+  'outdated_guide',
+  'unstable_connection',
+  'fake_vpn',
   'free_vpn_data',
   'incognito',
-  'unstable_connection',
+  'too_many_tabs',
+  'mobile_hotspot',
+  'mirror_found',
+  'right_tip',
+  'captcha_passed',
+  'stable_dns',
+  'phone_works',
 ] as const
 
 export const EVENT_IDS = Object.keys(EVENTS)
