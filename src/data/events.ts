@@ -1,46 +1,46 @@
 import type { BoardEvent } from '../game/types'
 
 export const EVENTS: Record<string, BoardEvent> = {
-  // --- Story funnel (fixed, spaced across the board) ---
+  // --- Story funnel: product benefit → board progress ---
   blancvpn_locations: {
     id: 'blancvpn_locations',
     title: 'Более 50 локаций',
-    text: 'BlancVPN дает доступ к серверам по всему миру — выбирайте локацию для быстрого и безопасного соединения.',
+    text: 'BlancVPN открывает доступ к серверам по всему миру — и ускоряет ваш путь. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
     tone: 'brand',
   },
   blancvpn_split: {
     id: 'blancvpn_split',
     title: 'Раздельное туннелирование',
-    text: 'Можно настроить, какие сайты идут через VPN, а какие — в обход. Так удобнее пользоваться и зарубежными, и российскими сервисами.',
+    text: 'Часть сайтов идет через VPN, часть — в обход. Меньше лишних остановок на поле. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
     tone: 'brand',
   },
   blancvpn_protocols: {
     id: 'blancvpn_protocols',
     title: 'Протокол подбирается сам',
-    text: 'BlancVPN автоматически выбирает подходящий протокол, чтобы соединение оставалось стабильным.',
+    text: 'BlancVPN сам выбирает стабильный протокол — соединение держится, и вы не теряете ход. Один шаг вперед.',
     effect: { kind: 'move', steps: 1 },
     tone: 'brand',
   },
   blancvpn_ru_services: {
     id: 'blancvpn_ru_services',
     title: 'Российские сервисы работают',
-    text: 'Банки, маркетплейсы и другие российские сервисы можно открывать, не отключая BlancVPN.',
+    text: 'Банки и маркетплейсы открываются без отключения VPN. Не нужно сходить с маршрута. Два шага вперед.',
     effect: { kind: 'move', steps: 2 },
     tone: 'brand',
   },
   blancvpn_guarantee: {
     id: 'blancvpn_guarantee',
     title: '30 дней на тест и возврат',
-    text: 'Если BlancVPN не подойдет, вернем деньги в полном объеме.',
+    text: 'Можно спокойно проверить BlancVPN: если не подойдет, вернем деньги. Один шаг к финишу.',
     effect: { kind: 'move', steps: 1 },
     tone: 'brand',
   },
   blancvpn_discount: {
     id: 'blancvpn_discount',
     title: 'Подписка со скидкой',
-    text: 'Дойдите до финиша — получите промокод на оформление подписки.',
+    text: 'Финиш близко: в конце партии вас ждет промокод на подписку BlancVPN.',
     effect: { kind: 'flavor' },
     tone: 'brand',
   },
@@ -93,14 +93,14 @@ export const EVENTS: Record<string, BoardEvent> = {
   free_vpn_data: {
     id: 'free_vpn_data',
     title: 'Бесплатный VPN',
-    text: 'Бесплатный VPN может зарабатывать на ваших данных — им тоже нужно на чем-то зарабатывать.',
+    text: 'Бесплатный VPN часто медленный и может продавать ваши данные. На поле это просто потеря темпа.',
     effect: { kind: 'flavor' },
     tone: 'neutral',
   },
   incognito: {
     id: 'incognito',
     title: 'Режим инкогнито',
-    text: 'Режим инкогнито не шифрует трафик и не скрывает ваш интернет-адрес от провайдера.',
+    text: 'Инкогнито не шифрует трафик и не двигает вас к финишу — только создает ощущение контроля.',
     effect: { kind: 'flavor' },
     tone: 'neutral',
   },
