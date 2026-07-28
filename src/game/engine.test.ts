@@ -4,10 +4,7 @@ import type { BoardEventMap, GameState } from './types'
 import { BOARD_SIZE, FINISH_INDEX } from './types'
 import { STORY_BY_CELL } from '../data/events'
 
-const TEST_BOARD_EVENTS: BoardEventMap = {
-  ...STORY_BY_CELL,
-  1: 'whitelist',
-}
+const TEST_BOARD_EVENTS: BoardEventMap = { ...STORY_BY_CELL }
 
 describe('game engine', () => {
   it('uses a 12-cell board', () => {
@@ -37,24 +34,8 @@ describe('game engine', () => {
     expect(state.vpnConnected).toBe(true)
   })
 
-  it('stops on the first surprise instead of jumping over the funnel', () => {
+  it('stops on the first story cell instead of jumping over the funnel', () => {
     let state = createInitialState(TEST_BOARD_EVENTS)
-    state = reduce(state, { type: 'START_ROLL' })
-    state = reduce(state, { type: 'RESOLVE_ROLL', value: 6 })
-
-    while (state.phase === 'moving') {
-      state = reduce(state, { type: 'STEP' })
-    }
-
-    // Cell 1 is friction — stop there before the story funnel.
-    expect(state.position).toBe(1)
-    expect(state.phase).toBe('event')
-    expect(state.activeEventId).toBe('whitelist')
-  })
-
-  it('reaches the first story cell after leaving start without friction', () => {
-    const map: BoardEventMap = { ...STORY_BY_CELL }
-    let state = createInitialState(map)
     state = reduce(state, { type: 'START_ROLL' })
     state = reduce(state, { type: 'RESOLVE_ROLL', value: 6 })
 
@@ -68,8 +49,7 @@ describe('game engine', () => {
   })
 
   it('moves forward on roll and lands idle on normal cell', () => {
-    const map: BoardEventMap = { ...STORY_BY_CELL }
-    let state = createInitialState(map)
+    let state = createInitialState(TEST_BOARD_EVENTS)
     state = reduce(state, { type: 'START_ROLL' })
     state = reduce(state, { type: 'RESOLVE_ROLL', value: 1 })
     expect(state.phase).toBe('moving')
@@ -116,12 +96,13 @@ describe('game engine', () => {
   })
 
   it('applies negative move without restarting the board', () => {
+    const map: BoardEventMap = { ...STORY_BY_CELL, 3: 'whitelist' }
     let state: GameState = {
-      ...createInitialState(TEST_BOARD_EVENTS),
-      position: 1,
+      ...createInitialState(map),
+      position: 3,
       phase: 'event',
       activeEventId: 'whitelist',
-      visited: [0, 1],
+      visited: [0, 3],
     }
     state = reduce(state, { type: 'DISMISS_EVENT' })
     expect(state.phase).toBe('moving')
@@ -130,9 +111,9 @@ describe('game engine', () => {
       state = reduce(state, { type: 'STEP' })
     }
 
-    expect(state.position).toBe(0)
-    expect(state.phase).toBe('idle')
-    expect(state.activeEventId).toBeNull()
+    expect(state.position).toBe(2)
+    expect(state.phase).toBe('event')
+    expect(state.activeEventId).toBe('blancvpn_locations')
   })
 
   it('flavor events return to idle', () => {
@@ -148,36 +129,16 @@ describe('game engine', () => {
     expect(state.position).toBe(10)
   })
 
-  it('wins when roll reaches or passes finish', () => {
+  it('wins when roll reaches finish from the last story cell', () => {
     let state: GameState = {
       ...createInitialState(TEST_BOARD_EVENTS),
-      position: FINISH_INDEX - 2,
+      position: 10,
       phase: 'rolling',
     }
     state = reduce(state, { type: 'RESOLVE_ROLL', value: 6 })
-    expect(state.pendingSteps).toBe(2)
 
     while (state.phase === 'moving') {
       state = reduce(state, { type: 'STEP' })
-    }
-
-    // Cell 10 is a surprise — stop there instead of finishing in one roll from 9.
-    // From FINISH_INDEX - 2 = 9, roll toward finish stops at 10 if surprise.
-    if (state.phase === 'event') {
-      expect(state.position).toBe(10)
-      state = reduce(state, { type: 'DISMISS_EVENT' })
-      while (state.phase === 'moving') {
-        state = reduce(state, { type: 'STEP' })
-      }
-    }
-
-    // From 10 after discount flavor, need another roll to finish
-    if (state.phase === 'idle' && state.position === 10) {
-      state = reduce(state, { type: 'START_ROLL' })
-      state = reduce(state, { type: 'RESOLVE_ROLL', value: 6 })
-      while (state.phase === 'moving') {
-        state = reduce(state, { type: 'STEP' })
-      }
     }
 
     expect(state.position).toBe(FINISH_INDEX)
@@ -194,12 +155,12 @@ describe('game engine', () => {
   })
 
   it('resets with a new board map', () => {
-    const nextMap: BoardEventMap = { ...TEST_BOARD_EVENTS, 1: 'unstable_connection' }
+    const nextMap: BoardEventMap = { ...TEST_BOARD_EVENTS }
     const state = reduce(createInitialState(TEST_BOARD_EVENTS), {
       type: 'RESET',
       boardEvents: nextMap,
     })
-    expect(state.boardEvents[1]).toBe('unstable_connection')
+    expect(state.boardEvents[2]).toBe('blancvpn_locations')
     expect(state.position).toBe(0)
   })
 

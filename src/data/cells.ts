@@ -11,13 +11,7 @@ const FLAVORS = [
 /** Story funnel cells — events assigned in eventPool */
 export const STORY_CELL_INDICES = [2, 4, 6, 8, 9, 10] as const
 
-/** Optional light friction before the funnel starts */
-export const FRICTION_CELL_INDICES = [1] as const
-
-export const SURPRISE_CELL_INDICES = [
-  ...STORY_CELL_INDICES,
-  ...FRICTION_CELL_INDICES,
-] as const
+export const SURPRISE_CELL_INDICES = [...STORY_CELL_INDICES] as const
 
 function buildCells(): BoardCell[] {
   const cells: BoardCell[] = []
