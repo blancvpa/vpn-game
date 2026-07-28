@@ -2,11 +2,12 @@ import { getCell } from '../data/cells'
 import { getEvent } from '../data/events'
 import {
   FINISH_INDEX,
+  type BoardEventMap,
   type GameAction,
   type GameState,
 } from './types'
 
-export function createInitialState(): GameState {
+export function createInitialState(boardEvents: BoardEventMap = {}): GameState {
   return {
     position: 0,
     skipsLeft: 0,
@@ -19,6 +20,7 @@ export function createInitialState(): GameState {
     lastMessage: null,
     vpnConnected: false,
     visited: [0],
+    boardEvents,
   }
 }
 
@@ -26,10 +28,9 @@ function markVisited(visited: number[], index: number): number[] {
   return visited.includes(index) ? visited : [...visited, index]
 }
 
-/** Events that toggle BlancVPN connection status on land */
 function vpnStatusForEvent(eventId: string, current: boolean): boolean {
-  if (eventId === 'blancvpn') return true
-  if (eventId === 'unpaid' || eventId === 'max' || eventId === 'router') return false
+  if (eventId.startsWith('blancvpn')) return true
+  if (eventId === 'unpaid_month' || eventId === 'max_order' || eventId === 'router_broken') return false
   return current
 }
 
@@ -41,7 +42,6 @@ function stepsToward(from: number, to: number): number {
   return to - from
 }
 
-/** After landing (pendingSteps === 0), resolve cell or win. */
 function resolveLanding(state: GameState): GameState {
   const visited = markVisited(state.visited, state.position)
 
@@ -71,16 +71,17 @@ function resolveLanding(state: GameState): GameState {
   }
 
   const cell = getCell(state.position)
+  const eventId = state.boardEvents[state.position]
 
-  if (cell.kind === 'surprise' && cell.eventId) {
+  if (cell.kind === 'surprise' && eventId) {
     return {
       ...state,
       phase: 'event',
-      activeEventId: cell.eventId,
+      activeEventId: eventId,
       pendingSteps: 0,
       lastMessage: null,
       visited,
-      vpnConnected: vpnStatusForEvent(cell.eventId, state.vpnConnected),
+      vpnConnected: vpnStatusForEvent(eventId, state.vpnConnected),
     }
   }
 
@@ -142,7 +143,7 @@ function applyEventEffect(state: GameState): GameState {
       }
     case 'restart':
       return {
-        ...createInitialState(),
+        ...createInitialState(state.boardEvents),
         turns: state.turns,
       }
     case 'move': {
@@ -163,7 +164,7 @@ function applyEventEffect(state: GameState): GameState {
 export function reduce(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'RESET':
-      return createInitialState()
+      return createInitialState(action.boardEvents)
 
     case 'CONSUME_SKIP': {
       if (state.phase !== 'idle' || state.skipsLeft <= 0) return state

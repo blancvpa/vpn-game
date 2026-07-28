@@ -14,22 +14,7 @@ const FLAVORS = [
   'Ищете рабочий DNS…',
 ]
 
-/** Surprise event placement on the 24-cell board (index → eventId) */
-const SURPRISES: Record<number, string> = {
-  2: 'whitelist',
-  4: 'email_support',
-  6: 'wildberries',
-  8: 'dpi',
-  10: 'blancvpn',
-  12: 'max',
-  14: 'support_silent',
-  16: 'mirror',
-  18: 'router',
-  19: 'captcha',
-  20: 'telegram_block',
-  21: 'neighbor',
-  22: 'unpaid',
-}
+export const SURPRISE_CELL_INDICES = [2, 4, 6, 8, 10, 12, 14, 16, 18, 19, 20, 21, 22] as const
 
 function buildCells(): BoardCell[] {
   const cells: BoardCell[] = []
@@ -55,13 +40,11 @@ function buildCells(): BoardCell[] {
       continue
     }
 
-    const eventId = SURPRISES[i]
-    if (eventId) {
+    if (SURPRISE_CELL_INDICES.includes(i as (typeof SURPRISE_CELL_INDICES)[number])) {
       cells.push({
         index: i,
         kind: 'surprise',
         label: String(i),
-        eventId,
       })
       continue
     }

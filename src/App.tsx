@@ -8,11 +8,12 @@ import { ThemeToggle } from './components/ThemeToggle'
 import { VpnStatus } from './components/VpnStatus'
 import { WinScreen } from './components/WinScreen'
 import { getEvent } from './data/events'
-import { createInitialState, reduce, rollDie } from './game/engine'
-import type { GameAction, GameState } from './game/types'
+import { createBoardEventMap } from './lib/eventPool'
 import { track } from './lib/analytics'
 import { issuePromoOnWin } from './lib/promo'
 import { applyTheme, getStoredTheme, setStoredTheme, type Theme } from './lib/theme'
+import { createInitialState, reduce, rollDie } from './game/engine'
+import type { GameAction, GameState } from './game/types'
 import './App.css'
 
 type Screen = 'splash' | 'play' | 'win'
@@ -26,7 +27,7 @@ const ROLL_MS = 900
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash')
-  const [state, dispatch] = useReducer(gameReducer, undefined, createInitialState)
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => createInitialState())
   const [promoCode, setPromoCode] = useState<string | null>(null)
   const [theme, setTheme] = useState<Theme>(() => getStoredTheme())
 
@@ -59,16 +60,21 @@ export default function App() {
     track('theme_toggle', { theme: next })
   }
 
-  function handleStart() {
-    track('game_start')
-    dispatch({ type: 'RESET' })
+  function startNewGame(source: 'start' | 'replay') {
+    const boardEvents = createBoardEventMap()
+    track(source === 'start' ? 'game_start' : 'game_replay', {
+      eventsAssigned: Object.keys(boardEvents).length,
+    })
+    dispatch({ type: 'RESET', boardEvents })
     setScreen('play')
   }
 
+  function handleStart() {
+    startNewGame('start')
+  }
+
   function handleReplay() {
-    track('game_replay')
-    dispatch({ type: 'RESET' })
-    setScreen('play')
+    startNewGame('replay')
   }
 
   async function handleRoll() {

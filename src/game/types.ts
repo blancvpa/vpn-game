@@ -21,10 +21,10 @@ export type BoardCell = {
   index: number
   kind: CellKind
   label: string
-  /** Short flavor shown when landing on a normal cell */
   flavor?: string
-  eventId?: string
 }
+
+export type BoardEventMap = Record<number, string>
 
 export type Phase = 'idle' | 'rolling' | 'moving' | 'event' | 'won'
 
@@ -35,15 +35,12 @@ export type GameState = {
   lastRoll: number | null
   activeEventId: string | null
   turns: number
-  /** Remaining steps to animate (positive = forward, negative = back) */
   pendingSteps: number
-  /** True while resolving a surprise move — no event chaining */
   suppressEvents: boolean
   lastMessage: string | null
-  /** BlancVPN connection status — turns on at the brand cell */
   vpnConnected: boolean
-  /** Cell indices the player has already stepped on */
   visited: number[]
+  boardEvents: BoardEventMap
 }
 
 export type GameAction =
@@ -52,4 +49,4 @@ export type GameAction =
   | { type: 'STEP' }
   | { type: 'DISMISS_EVENT' }
   | { type: 'CONSUME_SKIP' }
-  | { type: 'RESET' }
+  | { type: 'RESET'; boardEvents: BoardEventMap }
